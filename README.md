@@ -1,9 +1,8 @@
 # aws-security-group
 
-Fill all the env variables. If any problems exits remove the entry from last_ip.txt
+Copy `.env.example` to `.env`. 
 
-`composer install
-`
+`composer install`
 
 `php index.php`
 

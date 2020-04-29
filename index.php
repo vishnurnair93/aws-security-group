@@ -19,7 +19,7 @@ try {
         echo "Already exist";
         die();
     } else {
-        $result = $ec2Client->revokeSecurityGroupEgress([
+        $result_revoke = $ec2Client->revokeSecurityGroupIngress([
             'GroupId' => getenv('SECURITY_GROUP'),
             'IpPermissions' =>
             [
@@ -32,7 +32,7 @@ try {
                     [
                         0 =>
                         [
-                            'CidrIp' => $ip . '/32',
+                            'CidrIp' => $last_ip . '/32',
                             'Description' => getenv('USERNAME'),
                         ],
                     ],
@@ -41,7 +41,7 @@ try {
         ]);
     }
 
-    $result = $ec2Client->authorizeSecurityGroupIngress([
+    $result_authorize = $ec2Client->authorizeSecurityGroupIngress([
         'DryRun' => false,
         'GroupId' => getenv('SECURITY_GROUP'),
         'IpPermissions' =>
@@ -72,4 +72,6 @@ try {
 }
 
 
-echo json_encode($result->toArray());
+echo json_encode($result_revoke->toArray());
+echo json_encode($result_authorize->toArray());
+

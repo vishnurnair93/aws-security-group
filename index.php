@@ -19,26 +19,28 @@ try {
         echo "Already exist";
         die();
     } else {
-        $result_revoke = $ec2Client->revokeSecurityGroupIngress([
-            'GroupId' => getenv('SECURITY_GROUP'),
-            'IpPermissions' =>
-            [
-                0 =>
+        if($last_ip != ''){
+            $result_revoke = $ec2Client->revokeSecurityGroupIngress([
+                'GroupId' => getenv('SECURITY_GROUP'),
+                'IpPermissions' =>
                 [
-                    'FromPort' => '0',
-                    'IpProtocol' => 'tcp',
-                    'ToPort' => '65535',
-                    'IpRanges' =>
+                    0 =>
                     [
-                        0 =>
+                        'FromPort' => '0',
+                        'IpProtocol' => 'tcp',
+                        'ToPort' => '65535',
+                        'IpRanges' =>
                         [
-                            'CidrIp' => $last_ip . '/32',
-                            'Description' => getenv('USERNAME'),
+                            0 =>
+                            [
+                                'CidrIp' => $last_ip . '/32',
+                                'Description' => getenv('USERNAME'),
+                            ],
                         ],
                     ],
-                ],
-            ]
-        ]);
+                ]
+            ]);
+        }
     }
 
     $result_authorize = $ec2Client->authorizeSecurityGroupIngress([
@@ -71,7 +73,8 @@ try {
     die();
 }
 
-
-echo json_encode($result_revoke->toArray());
+if($result_revoke){
+    echo json_encode($result_revoke->toArray());
+}
 echo json_encode($result_authorize->toArray());
 

@@ -2,6 +2,7 @@
 
 $ip =  trim(file_get_contents('http://checkip.amazonaws.com/'));
 $last_ip = trim(file_get_contents('./last_ip.txt'));
+$result_revoke = [];
 require 'vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
@@ -9,7 +10,7 @@ $dotenv->load();
 use Aws\Credentials\CredentialProvider;
 
 $ec2Client = new Aws\Ec2\Ec2Client([
-    'region' => 'us-east-2',
+    'region' => getenv('REGION'),
     'version' => 'latest',
     'credentials' => CredentialProvider::env()
 ]);
